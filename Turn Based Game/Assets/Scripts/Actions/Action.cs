@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Action : MonoBehaviour
+public class Action 
 {
-    // Start is called before the first frame update
-    void Start()
+    public string name = "";
+    public uint cooldown = 1;
+    public bool finishTurn = false;
+
+    public void Execute( Character character) 
     {
-        
+        ExecuteAction(character);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    virtual public void ExecuteAction(Character character) {}
+
 }

@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //Character character1;
+    //Character character2;
+    //List<Character> selection1;
+    //List<Character> selection2;
+
+
+
     void Start()
     {
         
