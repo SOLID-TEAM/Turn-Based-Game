@@ -150,7 +150,6 @@ public class GUIManagerScript : MonoBehaviour
         }
         // -------------------------------
 
-
     }
 
     // Update is called once per frame
@@ -181,11 +180,28 @@ public class GUIManagerScript : MonoBehaviour
         action.name = butName;
         AddCombatLogEntry(playerIndex, playerIndex == 0 ? 1 : 0, action);
 
+        Character selectedChar = playerIndex == 0 ? characterA : characterB;
+
         switch (butName)
         {
             case "Skill1Button":
                 {
-                    //Debug.Log("blabla");
+                   // TODO
+                    break;
+                }
+            case "Skill2Button":
+                {
+                    // TODO
+                    break;
+                }
+            case "Skill3Button":
+                {
+                    // TODO
+                    break;
+                }
+            case "Skill4Button":
+                {
+                    // TODO
                     break;
                 }
             case "PlayButton":
@@ -199,6 +215,65 @@ public class GUIManagerScript : MonoBehaviour
                     StopToPlay();
                     break;
                 }
+            case "ButtonPlusHp":
+                {
+                    selectedChar.GetStat("life").baseValue += 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonMinHp":
+                {
+                    selectedChar.GetStat("life").baseValue -= 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonPlusAtk":
+                {
+                    selectedChar.GetStat("damage").baseValue += 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonMinAtk":
+                {
+                    selectedChar.GetStat("damage").baseValue -= 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonPlusDef":
+                {
+                    selectedChar.GetStat("armor").baseValue += 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonMinDef":
+                {
+                    selectedChar.GetStat("armor").baseValue -= 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonPlusSpeed":
+                {
+                    selectedChar.GetStat("speed").baseValue += 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "ButtonMinSpeed":
+                {
+                    selectedChar.GetStat("speed").baseValue -= 1.0f;
+                    ReloadCharactersInfo();
+                    break;
+                }
+            case "prevCharacter":
+                {
+                    // TODO
+                    break;
+                }
+            case "nextCharacter":
+                {
+                    // TODO
+                    break;
+                }
+
         }
 
     }
