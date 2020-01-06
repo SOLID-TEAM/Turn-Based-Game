@@ -43,4 +43,10 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
+    // TESTING
+    public Battle GetBattleInfo()
+    {
+        return battle;
+    }
 }

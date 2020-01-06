@@ -25,6 +25,9 @@ public class GUIManagerScript : MonoBehaviour
     private string[] skillsToDisable;
     private string[] buttonsToDisable;
 
+    // TODO: TESTING - REMOVE
+    public GameManager gameMan;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,12 +86,26 @@ public class GUIManagerScript : MonoBehaviour
         // GAME STATE
         GS = gameState.STOP;
         StopToPlay();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-   
+        // TESTING - REMOVE ------------------------
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            for (int i = 0; i < 10; ++i)
+            {
+                
+                Battle battle = gameMan.GetBattleInfo();
+                int numSimulations = 1;
+                int numWins = 0;
+
+                CSVManager.AppendToReport(battle.characterA, battle.characterB, numSimulations, numWins);
+            }
+        }
+        // ------------------------------------------
     }
 
     void OnButtonClick(string butName, int playerIndex)
