@@ -6,45 +6,74 @@ using UnityEngine.UI;
 
 public class GUIManagerScript : MonoBehaviour
 {
+    public enum gameState { PLAY, STOP};
+
     public GameObject player1;
     public GameObject player2;
     public GameObject PlaySimulate;
     public Text combatLogText;
     public ScrollRect scrollRect;
+    private gameState GS;
 
-    private Button[] p1Buttons;
-    private Button[] p2Buttons;
-    private Button[] gameButtons;
+    //private Button[] p1Buttons;
+    //private Button[] p2Buttons;
+    //private Button[] gameButtons;
+    private Dictionary<string, Button> p1Buttons;
+    private Dictionary<string, Button> p2Buttons;
+    private Dictionary<string, Button> gameButtons;
+
+    private string[] skillsToDisable;
+    private string[] buttonsToDisable;
 
     // Start is called before the first frame update
     void Start()
     {
+        skillsToDisable = new string[] {   "Skill1Button", "Skill2Button", "Skill3Button", "Skill4Button"};
+        buttonsToDisable = new string[] { "ButtonPlusHp", "ButtonMinHp","ButtonPlusAtk", "ButtonMinAtk",
+                                            "ButtonPlusDef", "ButtonMinDef", "ButtonPlusSpeed", "ButtonMinSpeed", 
+                                             "prevCharacter", "nextCharacter"};
+
+        p1Buttons = new Dictionary<string, Button>();
+        p2Buttons = new Dictionary<string, Button>();
+        gameButtons = new Dictionary<string, Button>();
         // get all buttons from player1 ----------------------------------
         // player1 is capable to interact with all buttons
+        Button[] tempButton = new Button[0];
         if (player1)
-            p1Buttons = player1.GetComponentsInChildren<Button>();
+            tempButton = player1.GetComponentsInChildren<Button>();
 
         // TODO: get skill lenght from player and disable the buttons without skill
-        foreach (Button button in p1Buttons)
+        foreach (Button button in tempButton)
+        {
             button.onClick.AddListener(() => OnButtonClick(button.name, 0));
+            p1Buttons.Add(button.name, button);
+        }
         // ----------------------------------------------------------------
 
         // get all buttons from player2(NO CONTROLLABLE) ----------------------------------
         // player2 is NOT capable to interact with all buttons, actions doesn't do anything
         if (player2)
-            p2Buttons = player2.GetComponentsInChildren<Button>();
+            tempButton = player2.GetComponentsInChildren<Button>();
 
         // TODO: get skill lenght from player and disable the buttons without skill
-        foreach (Button button in p2Buttons)
+        foreach (Button button in tempButton)
+        {
             button.onClick.AddListener(() => OnButtonClick(button.name, 1));
+            p2Buttons.Add(button.name, button);
+        }
         
 
         // Get general buttons ---------------------------------------
         if (PlaySimulate)
-            gameButtons = PlaySimulate.GetComponentsInChildren<Button>();
+            tempButton = PlaySimulate.GetComponentsInChildren<Button>();
 
-        foreach (Button button in gameButtons)
+        foreach (Button button in tempButton)
+        {
             button.onClick.AddListener(() => OnButtonClick(button.name, -1));
+            gameButtons.Add(button.name, button);
+        }
+        // shut down stop button
+        gameButtons["StopButton"].gameObject.SetActive(false);
         // ------------------------------------------------------------
 
         if (combatLogText)
@@ -52,6 +81,10 @@ public class GUIManagerScript : MonoBehaviour
 
         if (scrollRect)
             scrollRect = scrollRect.GetComponent<ScrollRect>();
+
+        // GAME STATE
+        GS = gameState.STOP;
+        StopToPlay();
     }
 
     // Update is called once per frame
@@ -67,17 +100,75 @@ public class GUIManagerScript : MonoBehaviour
         // TESTING
         Action action = new Action();
         action.name = butName;
+        AddCombatLogEntry(playerIndex, playerIndex == 0 ? 1 : 0, action);
 
         switch (butName)
         {
             case "Skill1Button":
                 {
-                    Debug.Log("blabla");
+                    //Debug.Log("blabla");
+                    break;
+                }
+            case "PlayButton":
+                {
+                    StartToPlay();
+                   
+                    break;
+                }
+            case "StopButton":
+                {
+                    StopToPlay();
                     break;
                 }
         }
 
-        AddCombatLogEntry(playerIndex, playerIndex == 0 ? 1 : 0, action);
+    }
+
+    void StartToPlay() // disable input for desired buttons
+    {
+        GS = gameState.PLAY;
+        gameButtons["StopButton"].gameObject.SetActive(true);
+        gameButtons["PlayButton"].gameObject.SetActive(false);
+        gameButtons["SimulateButton"].interactable = false;
+
+        // disable all base stats buttons and change character
+        // enable all skill buttons
+        // TODO: for(playerActions.count)
+        foreach(string str in buttonsToDisable)
+        {
+            p1Buttons[str].interactable = false;
+            p2Buttons[str].interactable = false;
+        }
+        foreach (string str in skillsToDisable)
+        {
+            p1Buttons[str].interactable = true;
+            //p2Buttons[str].interactable = true;
+        }
+
+    }
+
+    void StopToPlay()
+    {
+        GS = gameState.STOP;
+        gameButtons["StopButton"].gameObject.SetActive(false);
+        gameButtons["PlayButton"].gameObject.SetActive(true);
+        gameButtons["SimulateButton"].interactable = true;
+
+        // disable all skill buttons
+        // TODO: for(playerActions.count)
+        foreach (string str in buttonsToDisable)
+        {
+            p1Buttons[str].interactable = true;
+            p2Buttons[str].interactable = true;
+        }
+        foreach (string str in skillsToDisable)
+        {
+            p1Buttons[str].interactable = false;
+            p2Buttons[str].interactable = false;
+        }
+
+        combatLogText.text = "";
+
     }
 
     void AddCombatLogEntry(int fromPlayer, int toPlayer, Action action)
