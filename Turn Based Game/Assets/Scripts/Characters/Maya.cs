@@ -6,10 +6,10 @@ public class Maya : Character
 {
     override public void SetBaseStats()
     {
-        SetBaseStat("life", 100f);
-        SetBaseStat("damage", 100f);
-        SetBaseStat("armor", 100f);
-        SetBaseStat("speed", 100f);
+        SetBaseStat("life", 7f);
+        SetBaseStat("damage", 3f);
+        SetBaseStat("armor", 2f);
+        SetBaseStat("speed", 4f);
     }
     override public void SetActions()
     {

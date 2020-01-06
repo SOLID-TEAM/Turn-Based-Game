@@ -37,7 +37,7 @@ public class GUIManagerScript : MonoBehaviour
         skillsToDisable = new string[] {   "Skill1Button", "Skill2Button", "Skill3Button", "Skill4Button"};
         buttonsToDisable = new string[] { "ButtonPlusHp", "ButtonMinHp","ButtonPlusAtk", "ButtonMinAtk",
                                             "ButtonPlusDef", "ButtonMinDef", "ButtonPlusSpeed", "ButtonMinSpeed", 
-                                             "prevCharacter", "nextCharacter"};
+                                             "prevCharacter", "nextCharacter", "ButtonPlusLvl", "ButtonMinLvl"};
 
         p1Buttons = new Dictionary<string, Button>();
         p2Buttons = new Dictionary<string, Button>();
@@ -105,10 +105,10 @@ public class GUIManagerScript : MonoBehaviour
         // PLAYER SLOT 1 ----------------
         p1Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterA.name;
         // stats , get text from parent of any of the plus or min button
-        p1Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterA.GetStat("life").baseValue.ToString();
-        p1Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterA.GetStat("damage").baseValue.ToString();
-        p1Buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + characterA.GetStat("armor").baseValue.ToString();
-        p1Buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + characterA.GetStat("speed").baseValue.ToString();
+        p1Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterA.GetStat("life").baseValue.ToString() + " Total: " + characterA.GetStat("life").finalValue.ToString();
+        p1Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterA.GetStat("damage").baseValue.ToString() + " Total: " + characterA.GetStat("damage").finalValue.ToString();
+        p1Buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + characterA.GetStat("armor").baseValue.ToString() + " Total: " + characterA.GetStat("armor").finalValue.ToString();
+        p1Buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + characterA.GetStat("speed").baseValue.ToString() + " Total: " + characterA.GetStat("speed").finalValue.ToString();
         // skills -----------------------
         int i = 0;
         foreach(Action action in characterA.actions)
@@ -129,13 +129,13 @@ public class GUIManagerScript : MonoBehaviour
         // PLAYER SLOT 2 ----------------
         p2Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterB.name;
         // stats , get text from parent of any of the plus or min button
-        p2Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterB.GetStat("life").baseValue.ToString();
-        p2Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterB.GetStat("damage").baseValue.ToString();
-        p2Buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + characterB.GetStat("armor").baseValue.ToString();
-        p2Buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + characterB.GetStat("speed").baseValue.ToString();
+        p2Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterB.GetStat("life").baseValue.ToString() + " Total: " + characterB.GetStat("life").finalValue.ToString(); ;
+        p2Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterB.GetStat("damage").baseValue.ToString() + " Total: " + characterB.GetStat("damage").finalValue.ToString();
+        p2Buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + characterB.GetStat("armor").baseValue.ToString() + " Total: " + characterB.GetStat("armor").finalValue.ToString();
+        p2Buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + characterB.GetStat("speed").baseValue.ToString() + " Total: " + characterB.GetStat("speed").finalValue.ToString();
         // skills -----------------------
         i = 0;
-        foreach (Action action in characterA.actions)
+        foreach (Action action in characterB.actions)
         {
             p2Buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.name;
             p2Buttons[skillsToDisable[i]].gameObject.SetActive(true);
@@ -218,49 +218,41 @@ public class GUIManagerScript : MonoBehaviour
             case "ButtonPlusHp":
                 {
                     selectedChar.GetStat("life").baseValue += 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "ButtonMinHp":
                 {
-                    selectedChar.GetStat("life").baseValue -= 1.0f;
-                    ReloadCharactersInfo();
+                    selectedChar.GetStat("life").baseValue -= 1.0f; 
                     break;
                 }
             case "ButtonPlusAtk":
                 {
                     selectedChar.GetStat("damage").baseValue += 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "ButtonMinAtk":
                 {
                     selectedChar.GetStat("damage").baseValue -= 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "ButtonPlusDef":
                 {
                     selectedChar.GetStat("armor").baseValue += 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "ButtonMinDef":
                 {
                     selectedChar.GetStat("armor").baseValue -= 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "ButtonPlusSpeed":
                 {
                     selectedChar.GetStat("speed").baseValue += 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "ButtonMinSpeed":
                 {
                     selectedChar.GetStat("speed").baseValue -= 1.0f;
-                    ReloadCharactersInfo();
                     break;
                 }
             case "prevCharacter":
@@ -273,8 +265,28 @@ public class GUIManagerScript : MonoBehaviour
                     // TODO
                     break;
                 }
+            case "ButtonPlusLvl":
+                {
+                    // TODO
+                    break;
+                }
+            case "ButtonMinLvl":
+                {
+                    // TODO
+                    break;
+                }
+            case "SimulateButton":
+                {
+                    int numSimulations = int.Parse(gameButtons[butName].GetComponentInChildren<InputField>().text);
+                    Debug.Log(numSimulations);
+
+                    break;
+                }
 
         }
+
+        // nerf this
+        ReloadCharactersInfo();
 
     }
 
