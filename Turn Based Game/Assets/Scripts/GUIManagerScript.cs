@@ -24,9 +24,12 @@ public class GUIManagerScript : MonoBehaviour
 
     private string[] skillsToDisable;
     private string[] buttonsToDisable;
+    private string[] actionButtons;
 
-    // TODO: TESTING - REMOVE
+    // TODO: TESTING - REMOVE - ADAPT
     public GameManager gameMan;
+    private Character characterA;
+    private Character characterB;
 
     // Start is called before the first frame update
     void Start()
@@ -86,6 +89,67 @@ public class GUIManagerScript : MonoBehaviour
         // GAME STATE
         GS = gameState.STOP;
         StopToPlay();
+
+        // load characters info
+        ReloadCharactersInfo();
+
+    }
+    
+    void ReloadCharactersInfo()
+    {
+        Battle battleInfo = gameMan.GetBattleInfo();
+        characterA = battleInfo.characterA;
+        characterB = battleInfo.characterB;
+
+        // TODO: image
+        // PLAYER SLOT 1 ----------------
+        p1Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterA.name;
+        // stats , get text from parent of any of the plus or min button
+        p1Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterA.GetStat("life").baseValue.ToString();
+        p1Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterA.GetStat("damage").baseValue.ToString();
+        p1Buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + characterA.GetStat("armor").baseValue.ToString();
+        p1Buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + characterA.GetStat("speed").baseValue.ToString();
+        // skills -----------------------
+        int i = 0;
+        foreach(Action action in characterA.actions)
+        {
+            p1Buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.name;
+            p1Buttons[skillsToDisable[i]].gameObject.SetActive(true);
+            //p1Buttons[skillsToDisable[i]].interactable = true;
+            ++i;
+        }
+        int maxSkills = 4;
+        for(int x = maxSkills; x > i; x--)
+        {
+            p1Buttons[skillsToDisable[x-1]].interactable = false;
+            p1Buttons[skillsToDisable[x-1]].gameObject.SetActive(false);
+        }
+        // -------------------------------
+
+        // PLAYER SLOT 2 ----------------
+        p2Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterB.name;
+        // stats , get text from parent of any of the plus or min button
+        p2Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterB.GetStat("life").baseValue.ToString();
+        p2Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterB.GetStat("damage").baseValue.ToString();
+        p2Buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + characterB.GetStat("armor").baseValue.ToString();
+        p2Buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + characterB.GetStat("speed").baseValue.ToString();
+        // skills -----------------------
+        i = 0;
+        foreach (Action action in characterA.actions)
+        {
+            p2Buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.name;
+            p2Buttons[skillsToDisable[i]].gameObject.SetActive(true);
+            //p2Buttons[skillsToDisable[i]].interactable = false; // PLAYER 2 not capable of interact
+            ++i;
+        }
+        //int maxSkills = 4;
+        for (int x = maxSkills; x > i; x--)
+        {
+            p2Buttons[skillsToDisable[x - 1]].interactable = false;
+            p2Buttons[skillsToDisable[x - 1]].gameObject.SetActive(false);
+        }
+        // -------------------------------
+
 
     }
 

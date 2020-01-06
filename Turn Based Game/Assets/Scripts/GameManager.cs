@@ -20,13 +20,19 @@ public class GameManager : MonoBehaviour
     private GameObject prefabB;
     private Battle battle;
     private bool startSimulation = false;
-    void Start()
+
+    private void Awake()
     {
         prefabA = Resources.Load<GameObject>("Prefabs/Characters/Maya");
         prefabB = Resources.Load<GameObject>("Prefabs/Characters/Dripper");
         battle = new Battle();
         battle.characterA = Instantiate(prefabA).GetComponent<Character>();
         battle.characterB = Instantiate(prefabB).GetComponent<Character>();
+    }
+    void Start()
+    {
+        
+        
     }
 
     // Update is called once per frame
