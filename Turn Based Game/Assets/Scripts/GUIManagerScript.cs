@@ -72,8 +72,6 @@ public class GUIManagerScript : MonoBehaviour
             button.onClick.AddListener(() => OnButtonClick(button.name, -1));
             gameButtons.Add(button.name, button);
         }
-        // shut down stop button
-        gameButtons["StopButton"].gameObject.SetActive(false);
         // ------------------------------------------------------------
 
         if (combatLogText)
