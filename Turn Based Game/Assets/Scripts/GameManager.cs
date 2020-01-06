@@ -2,23 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MyEventType { BuffDestroyed, CharDestroyed, Unknown}
+public class MyEvent
+{
+    public MyEventType type = MyEventType.Unknown;
+    public object myObject;
+    public MyEvent(MyEventType type, object myObject )
+    {
+        this.type = type;
+        this.myObject = myObject;
+    }
+}
+
 public class GameManager : MonoBehaviour
 {
-    //Character character1;
-    //Character character2;
-    //List<Character> selection1;
-    //List<Character> selection2;
-
-
-
+    private GameObject prefabA;
+    private GameObject prefabB;
+    private Battle battle;
+    private bool startSimulation = false;
     void Start()
     {
-        
+        prefabA = Resources.Load<GameObject>("Prefabs/Characters/Maya");
+        prefabB = Resources.Load<GameObject>("Prefabs/Characters/Dripper");
+        battle = new Battle();
+        battle.characterA = Instantiate(prefabA).GetComponent<Character>();
+        battle.characterB = Instantiate(prefabB).GetComponent<Character>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            startSimulation = true;
+        }
+
+        if (startSimulation)
+        {
+            battle.UpdateBattle();
+        }
+
     }
 }
