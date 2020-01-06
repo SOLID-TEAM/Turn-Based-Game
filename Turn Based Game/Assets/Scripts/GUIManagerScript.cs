@@ -9,6 +9,8 @@ public class GUIManagerScript : MonoBehaviour
     public GameObject player1;
     public GameObject player2;
     public GameObject PlaySimulate;
+    public Text combatLogText;
+    public ScrollRect scrollRect;
 
     private Button[] p1Buttons;
     private Button[] p2Buttons;
@@ -44,17 +46,52 @@ public class GUIManagerScript : MonoBehaviour
         foreach (Button button in gameButtons)
             button.onClick.AddListener(() => OnButtonClick(button.name, -1));
         // ------------------------------------------------------------
+
+        if (combatLogText)
+            combatLogText.text = "";
+
+        if (scrollRect)
+            scrollRect = scrollRect.GetComponent<ScrollRect>();
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+   
     }
-
 
     void OnButtonClick(string butName, int playerIndex)
     {
         Debug.Log("player: " + playerIndex + ", " + butName);
+
+        // TESTING
+        Action action = new Action();
+        action.name = butName;
+
+        switch (butName)
+        {
+            case "Skill1Button":
+                {
+                    Debug.Log("blabla");
+                    break;
+                }
+        }
+
+        AddCombatLogEntry(playerIndex, playerIndex == 0 ? 1 : 0, action);
+    }
+
+    void AddCombatLogEntry(int fromPlayer, int toPlayer, Action action)
+    {
+        combatLogText.text += "Player " + fromPlayer + " used " + action.name + " to " + toPlayer + "\n";
+        
+        Canvas.ForceUpdateCanvases();
+        combatLogText.GetComponent<ContentSizeFitter>().SetLayoutVertical();
+
+        if (scrollRect)
+        {
+            scrollRect.SetLayoutVertical();
+            scrollRect.verticalNormalizedPosition = 0.0f;
+        }
+        
     }
 }
