@@ -18,5 +18,10 @@ public class Maya : Character
         AddAction(new AvoidAction());
         AddAction(new BloodBagAction());
     }
+
+    public override void SetImage()
+    {
+        image = Resources.Load<Sprite>("Textures/1");
+    }
 }
 
