@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
 {
 
     private GameState gameState = GameState.StopSimulation;
-    public CharacterType selectedCharA;
-    public CharacterType selectedCharB;
+    [HideInInspector] public CharacterType selectedCharA;
+    [HideInInspector] public CharacterType selectedCharB;
 
     private List<Character> charSelectionA;
     private List<Character> charSelectionB;
@@ -32,13 +32,13 @@ public class GameManager : MonoBehaviour
 
     private Battle battle;
 
-    public bool controlCharacterA = true;
-    public bool controlCharacterB = true;
+    [HideInInspector] public bool controlCharacterA = true;
+    [HideInInspector] public bool controlCharacterB = true;
 
-    public int    currentSimulation;
-    public int    numSimulations = 10;
-    public float  winBattles = 0;
-    public float  loseBattles = 0;
+    [HideInInspector] public int  currentSimulation;
+    [HideInInspector] public int  numSimulations = 10;
+    [HideInInspector] public int  winBattles = 0;
+    [HideInInspector] public int  loseBattles = 0;
 
     private void Awake()
     {
@@ -68,6 +68,9 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        numSimulations = 10;
+        winBattles = 0;
+        loseBattles = 0;
     }
     // Update is called once per frame
     void Update()
@@ -93,7 +96,7 @@ public class GameManager : MonoBehaviour
                 }
             case GameState.EndSimulation:
                 {
-                    // TODO: Get data and write excel 
+                    CSVManager.AppendToReport(battle.characterA, battle.characterB, numSimulations, winBattles);
                     gameState = GameState.WaitResetSimulation;
                     break;
                 }

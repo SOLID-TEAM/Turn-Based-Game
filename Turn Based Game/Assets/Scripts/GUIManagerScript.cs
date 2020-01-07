@@ -99,7 +99,18 @@ public class GUIManagerScript : MonoBehaviour
     {
         buttons["prevCharacter"].GetComponentInParent<Text>().text = character.characterName;
         // image
-        GameObject test = player1.transform.Find("ImageBg").gameObject;
+
+        GameObject test;
+
+        if (character == gameMan.GetSelectedCharA())
+        {
+            test = player1.transform.Find("ImageBg").gameObject;
+        }
+        else
+        {
+            test = player2.transform.Find("ImageBg").gameObject;
+        }
+
         Image[] img = test.GetComponentsInChildren<Image>();
         img[img.Length - 1].sprite = character.image;
 
@@ -147,19 +158,19 @@ public class GUIManagerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TESTING - REMOVE ------------------------
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            for (int i = 0; i < 10; ++i)
-            {
+        //// TESTING - REMOVE ------------------------
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    for (int i = 0; i < 10; ++i)
+        //    {
                 
-                Battle battle = gameMan.GetBattleInfo();
-                int numSimulations = 1;
-                int numWins = 0;
+        //        Battle battle = gameMan.GetBattleInfo();
+        //        int numSimulations = 1;
+        //        int numWins = 0;
 
-                CSVManager.AppendToReport(battle.characterA, battle.characterB, numSimulations, numWins);
-            }
-        }
+        //        CSVManager.AppendToReport(battle.characterA, battle.characterB, numSimulations, numWins);
+        //    }
+        //}
 
         UpdateInfo();
     }

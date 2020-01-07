@@ -35,14 +35,16 @@ public static class CSVManager
         {
             string finalString = "";
             // character A and B -------------------------
-            finalString += charA.name + reportSeparator;
+            finalString += charA.characterName + reportSeparator;
             foreach(Statistic stat in charA.statistics)
             {
+                if (stat.name == "avoid") continue;
                 finalString += stat.initValue.ToString() + reportSeparator;
             }
-            finalString += charB.name + reportSeparator;
+            finalString += charB.characterName + reportSeparator;
             foreach (Statistic stat in charB.statistics)
             {
+                if (stat.name == "avoid") continue;
                 finalString += stat.initValue.ToString() + reportSeparator;
             }
             // -------------------------------------------

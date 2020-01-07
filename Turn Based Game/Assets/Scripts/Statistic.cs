@@ -19,8 +19,7 @@ public class Statistic
     {
         set
         {
-            _finalValue = value;
-            _finalValue = Mathf.Clamp(_finalValue, min, max);
+            _finalValue = Mathf.Clamp(value, min, max);
         }
 
         get
