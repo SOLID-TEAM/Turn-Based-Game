@@ -75,11 +75,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            gameState = GameState.StartSimulation;
-        }
-
         switch (gameState)
         { 
             case GameState.StartSimulation:
@@ -115,15 +110,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartSimulation()
+    public void StartSimulation( int simulations )
     {
-        gameState = GameState.StartSimulation;
+        if (gameState == GameState.StopSimulation)
+        {
+            ResetSimulation();
+            numSimulations = simulations;
+            gameState = GameState.StartSimulation;
+        }
     }
 
     public void ResetSimulation()
     {
-        battle.characterA.Reset();
-        battle.characterB.Reset();
+        currentSimulation = numSimulations;
+        battle.ResetBattle();
         winBattles = 0;
         loseBattles = 0;
 
@@ -151,8 +151,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        battle.characterA.Reset();
-                        battle.characterB.Reset();
+                        battle.ResetBattle();
                         battle.StartBattle(GetSelectedCharA(), GetSelectedCharB());
                     }
 

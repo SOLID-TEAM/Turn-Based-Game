@@ -98,6 +98,14 @@ public class Battle
         Object.FindObjectOfType<GameManager>().Events(new MyEvent(MyEventType.BattleFinished, null));
     }
 
+    public void ResetBattle()
+    {
+        if (characterA != null)
+            characterA.Reset();
+        if (characterB != null)
+            characterB.Reset();
+    }
+
     // Turn Functions ---------------------------
     public void StartTurn()
     {

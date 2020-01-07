@@ -222,42 +222,42 @@ public class GUIManagerScript : MonoBehaviour
                 }
             case "ButtonPlusHp":
                 {
-                    selectedChar.GetStat("life").currentValue += 1.0f;
+                    selectedChar.GetStat("life").initValue += 1.0f;
                     break;
                 }
             case "ButtonMinHp":
                 {
-                    selectedChar.GetStat("life").currentValue -= 1.0f; 
+                    selectedChar.GetStat("life").initValue -= 1.0f; 
                     break;
                 }
             case "ButtonPlusAtk":
                 {
-                    selectedChar.GetStat("damage").currentValue += 1.0f;
+                    selectedChar.GetStat("damage").initValue += 1.0f;
                     break;
                 }
             case "ButtonMinAtk":
                 {
-                    selectedChar.GetStat("damage").currentValue -= 1.0f;
+                    selectedChar.GetStat("damage").initValue -= 1.0f;
                     break;
                 }
             case "ButtonPlusDef":
                 {
-                    selectedChar.GetStat("armor").currentValue += 1.0f;
+                    selectedChar.GetStat("armor").initValue += 1.0f;
                     break;
                 }
             case "ButtonMinDef":
                 {
-                    selectedChar.GetStat("armor").currentValue -= 1.0f;
+                    selectedChar.GetStat("armor").initValue -= 1.0f;
                     break;
                 }
             case "ButtonPlusSpeed":
                 {
-                    selectedChar.GetStat("speed").currentValue += 1.0f;
+                    selectedChar.GetStat("speed").initValue += 1.0f;
                     break;
                 }
             case "ButtonMinSpeed":
                 {
-                    selectedChar.GetStat("speed").currentValue -= 1.0f;
+                    selectedChar.GetStat("speed").initValue -= 1.0f;
                     break;
                 }
             case "prevCharacter":
@@ -315,7 +315,7 @@ public class GUIManagerScript : MonoBehaviour
             case "SimulateButton":
                 {
                     int numSimulations = int.Parse(gameButtons[butName].GetComponentInChildren<InputField>().text);
-                    Debug.Log(numSimulations);
+                    gameMan.StartSimulation(numSimulations);
 
                     break;
                 }
