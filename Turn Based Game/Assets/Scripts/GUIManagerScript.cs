@@ -317,6 +317,8 @@ public class GUIManagerScript : MonoBehaviour
                     int numSimulations = int.Parse(gameButtons[butName].GetComponentInChildren<InputField>().text);
                     gameMan.StartSimulation(numSimulations);
 
+                    combatLogText.text = "";
+
                     break;
                 }
 
@@ -369,9 +371,11 @@ public class GUIManagerScript : MonoBehaviour
 
     }
 
-    void AddCombatLogEntry(int fromPlayer, int toPlayer, Action action)
+    public void AddCombatLogEntry(string str)//int fromPlayer, int toPlayer, Action action)
     {
-        combatLogText.text += "Player " + fromPlayer + " used " + action.actionName + " to " + toPlayer + "\n";
+        //combatLogText.text += "Player " + fromPlayer + " used " + action.actionName + " to " + toPlayer + "\n";
+
+        combatLogText.text += str + "\n";
         
         Canvas.ForceUpdateCanvases();
         combatLogText.GetComponent<ContentSizeFitter>().SetLayoutVertical();
