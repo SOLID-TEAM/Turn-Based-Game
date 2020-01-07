@@ -11,7 +11,7 @@ public class Statistic
     public float    min;
     public float    max;
     private float   _finalValue;
-    public float    finalValue
+    public float    finalValue // Base Stat Value with buff or other modifications
     {
         set
         {
@@ -30,8 +30,8 @@ public class Statistic
         }
     }
 
-    private float _baseValue;
-    public float    baseValue
+    private float _baseValue; 
+    public float baseValue // Stat Value modified by game (ex. level)
     {
         set 
         {
@@ -44,14 +44,35 @@ public class Statistic
             return _baseValue;
         }
     }
-    public Statistic(string name, float baseValue, float min = 0f, float max = 9999f)
+
+    private float _initValue;
+    public float initValue // Stat Value at level 1
+    {
+        set
+        {
+            _initValue = value;
+            baseValue = value;
+        }
+
+        get
+        {
+            return _initValue;
+        }
+    }
+
+    public Statistic(string name, float initValue, float min = 0f, float max = 9999f)
     {
         statModifiers = new List<StatModifier>();
 
         this.name = name;
-        this.baseValue = baseValue;
         this.min = min;
         this.max = max;
+        this.initValue = initValue;
+    }
+
+    public void SetInitValue()
+    {
+        baseValue = initValue;
     }
     public void UpdateFinalStat()
     {
@@ -72,7 +93,7 @@ public class Statistic
     }
     public void AddModifier( Buff buff, float value, StatModType type = StatModType.multiply)
     {
-        StatModifier statModifier = new StatModifier(buff, value, type);
+        StatModifier statModifier = new StatModifier(this, buff, value, type);
         statModifiers.Add(statModifier);
         SortBuffsByType();
         update = true;

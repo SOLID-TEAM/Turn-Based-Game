@@ -1,44 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-enum BattleState {startTurn, waitTurn, endTurn, startRound, endRound};
+enum BattleState {startBattle , waitBattle, endBattle, startTurn, waitTurn, endTurn, startRound, endRound};
 public class Battle 
 {
     uint round = 1;
-    BattleState battleState = BattleState.startRound;
+    BattleState battleState = BattleState.waitBattle;
 
     public Character characterA;
     public Character characterB;
     Character currentChar;
+    Character winnerChar;
+
     List<Character> roundList;
 
     public Battle()
     {
         roundList = new List<Character>();
     }
-
-    public void OrderRoundBySpeed()
-    {
-        roundList.Sort(CompareCharacterSpeed);
-    }
-
-    public int CompareCharacterSpeed(Character a, Character b)
-    {
-        Statistic speedA = a.GetStat("speed");
-        Statistic speedB = b.GetStat("speed");
-
-        if (speedA.finalValue < speedB.finalValue)
-            return -1;
-        else if (speedA.finalValue > speedB.finalValue)
-            return 1;
-        else
-            return 0;
-    }
-
     public void UpdateBattle()
     {
+        CheckWinner();
+
         switch (battleState)
         {
+            case BattleState.startBattle:
+                break;
+            case BattleState.waitBattle:
+                break;
+            case BattleState.endBattle:
+                EndBattle();
+                break;
             case BattleState.startRound:
                 StartRound();
                 break;
@@ -59,13 +51,90 @@ public class Battle
         }
     }
 
+    // Win/Lose Conditions ----------------------
+
+    public void CheckWinner()
+    {
+        Character winner = null;
+
+        if (characterA != null && characterB != null)
+        {
+            if (characterA.GetStat("life").baseValue == 0)
+            {
+                winner =  characterA;
+            }
+            else if (characterB.GetStat("life").baseValue == 0)
+            {
+                winner =  characterB;
+            }
+        }
+
+        if (winner != null)
+        {
+            winnerChar = winner;
+            battleState = BattleState.endBattle;
+        }
+    }
+
+    // Battle Functions -------------------------
+    public void StartBattle( Character a, Character b)
+    {
+        characterA = a;
+        characterB = b;
+
+        if (characterA != null && characterB != null)
+        {
+            battleState = BattleState.startRound;
+        }
+    }
+    public void EndBattle()
+    {
+        battleState = BattleState.waitBattle;
+        Object.FindObjectOfType<GameManager>().Events(new MyEvent(MyEventType.BattleFinished, null));
+    }
+
+    // Turn Functions ---------------------------
+    public void StartTurn()
+    {
+        currentChar = roundList[0];
+
+        Debug.Log("Start Turn " + currentChar.characterName);
+        currentChar.StartTurn();
+
+        battleState = BattleState.waitTurn;
+    }
+    public void WaitTurn()
+    {
+        if (currentChar.WaitTurn())
+        {
+            battleState = BattleState.endTurn;
+        }
+    }
+    public void EndTurn()
+    {
+        Debug.Log("End Turn " + currentChar.characterName);
+
+        currentChar.EndTurn();
+        roundList.Remove(currentChar);
+
+        if (roundList.Count == 0)
+        {
+            battleState = BattleState.endRound;
+        }
+        else
+        {
+            battleState = BattleState.startTurn;
+        }
+    }
+
+    // Round Functions -------------------------
     public void StartRound()
     {
         Debug.Log("Start Round : " + round.ToString());
         roundList.Clear();
         roundList.Add(characterA);
         roundList.Add(characterB);
-        OrderRoundBySpeed(); 
+        OrderRoundBySpeed();
 
         battleState = BattleState.startTurn;
     }
@@ -76,38 +145,23 @@ public class Battle
 
         battleState = BattleState.startRound;
     }
-    public void StartTurn()
+
+    // Round order ----------------------------
+    public void OrderRoundBySpeed()
     {
-        currentChar = roundList[0];
-
-        Debug.Log("Start Turn " + currentChar.name + " : " + round.ToString());
-        currentChar.StartTurn();
-
-        battleState = BattleState.waitTurn;
+        roundList.Sort(CompareCharacterSpeed);
     }
-    public void WaitTurn()
+
+    public int CompareCharacterSpeed(Character a, Character b)
     {
-        Debug.Log("Wait Turn " + currentChar.name + " : " + round.ToString());
+        Statistic speedA = a.GetStat("speed");
+        Statistic speedB = b.GetStat("speed");
 
-        if (currentChar.WaitTurn())
-        {
-            battleState = BattleState.endTurn;
-        }
-    }
-    public void EndTurn()
-    {
-        Debug.Log("End Turn " + currentChar.name + " : " + round.ToString());
-
-        currentChar.EndTurn();
-        roundList.Remove(currentChar);
-
-        if (roundList.Count > 0)
-        {
-            battleState = BattleState.startTurn;
-        }
+        if (speedA.finalValue < speedB.finalValue)
+            return -1;
+        else if (speedA.finalValue > speedB.finalValue)
+            return 1;
         else
-        {
-            battleState = BattleState.startRound;
-        }
+            return 0;
     }
 }

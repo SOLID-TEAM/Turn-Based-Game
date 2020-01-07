@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Conversor : Character
 {
-    override public void SetBaseStats() 
+    override public void SetDefaultValues() 
     {
-        SetBaseStat("life",   100f);
-        SetBaseStat("damage", 100f);
-        SetBaseStat("armor",  100f);
-        SetBaseStat("speed",  100f);
+        characterName = "Conversor";
+
+        SetInitStatValue("life",   100f);
+        SetInitStatValue("damage", 100f);
+        SetInitStatValue("armor",  100f);
+        SetInitStatValue("speed",  100f);
     }
     override public void SetActions() 
     {

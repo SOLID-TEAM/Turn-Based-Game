@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Maya : Character
 {
-    override public void SetBaseStats()
+    override public void SetDefaultValues()
     {
-        SetBaseStat("life", 7f);
-        SetBaseStat("damage", 3f);
-        SetBaseStat("armor", 2f);
-        SetBaseStat("speed", 4f);
+        characterName = "Maya";
+
+        SetInitStatValue("life", 7f);
+        SetInitStatValue("damage", 3f);
+        SetInitStatValue("armor", 2f);
+        SetInitStatValue("speed", 4f);
     }
     override public void SetActions()
     {

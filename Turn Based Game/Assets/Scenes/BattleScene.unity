@@ -228,6 +228,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd904f67e3e8dcb41ac08c4c82c5c6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedCharA: 0
+  selectedCharB: 0
+  controlCharacterA: 1
+  controlCharacterB: 1
+  currentSimulation: 0
+  numSimulations: 30
 --- !u!4 &72417368
 Transform:
   m_ObjectHideFlags: 0

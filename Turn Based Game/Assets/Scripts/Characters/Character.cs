@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
+    [HideInInspector]public string  characterName;
     public List<Action>    actions;
     public List<Statistic> statistics;
     public List<Buff>      buffs;
 
-    virtual public void SetBaseStats() {}
+    virtual public void SetDefaultValues() {}
     virtual public void SetActions() {}
 
     void Start()
@@ -25,7 +26,7 @@ public class Character : MonoBehaviour
         statistics.Add(new Statistic("armor",   100f));
         statistics.Add(new Statistic("speed",   100f));
 
-        SetBaseStats();  // Virtual for each character 
+        SetDefaultValues();  // Virtual for each character 
 
         // Add actions ----------------------------------
 
@@ -34,7 +35,13 @@ public class Character : MonoBehaviour
         SetActions(); // Virtual for each character 
 
     }
-    void Update() {}
+    public void ResetStats()
+    {
+        foreach(Statistic stat in statistics)
+        {
+            stat.SetInitValue();
+        }
+    }
 
     // Turn functions --------------------------------
     public void StartTurn()
@@ -47,6 +54,11 @@ public class Character : MonoBehaviour
 
     public bool WaitTurn()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -70,7 +82,6 @@ public class Character : MonoBehaviour
         }
         return null;
     }
-
     public void AddToBaseStat(string name, float value)
     {
         Statistic statistic = GetStat(name);
@@ -87,13 +98,13 @@ public class Character : MonoBehaviour
 
         statistic.baseValue -= value;
     }
-    public void SetBaseStat(string name, float value)
+    public void SetInitStatValue(string name, float value)
     {
         Statistic statistic = GetStat(name);
 
         if (statistic == null) return;
 
-        statistic.baseValue = value;
+        statistic.initValue = value;
     }
 
     // Actions functions ---------------------------

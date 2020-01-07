@@ -97,13 +97,12 @@ public class GUIManagerScript : MonoBehaviour
     
     void ReloadCharactersInfo()
     {
-        Battle battleInfo = gameMan.GetBattleInfo();
-        characterA = battleInfo.characterA;
-        characterB = battleInfo.characterB;
+        characterA = gameMan.GetSelectedCharA();
+        characterB = gameMan.GetSelectedCharB();
 
         // TODO: image
         // PLAYER SLOT 1 ----------------
-        p1Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterA.name;
+        p1Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterA.characterName;
         // stats , get text from parent of any of the plus or min button
         p1Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterA.GetStat("life").baseValue.ToString() + " Total: " + characterA.GetStat("life").finalValue.ToString();
         p1Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterA.GetStat("damage").baseValue.ToString() + " Total: " + characterA.GetStat("damage").finalValue.ToString();
@@ -127,7 +126,7 @@ public class GUIManagerScript : MonoBehaviour
         // -------------------------------
 
         // PLAYER SLOT 2 ----------------
-        p2Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterB.name;
+        p2Buttons["prevCharacter"].GetComponentInParent<Text>().text = characterB.characterName;
         // stats , get text from parent of any of the plus or min button
         p2Buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + characterB.GetStat("life").baseValue.ToString() + " Total: " + characterB.GetStat("life").finalValue.ToString(); ;
         p2Buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + characterB.GetStat("damage").baseValue.ToString() + " Total: " + characterB.GetStat("damage").finalValue.ToString();
