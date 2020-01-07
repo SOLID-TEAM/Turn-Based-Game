@@ -6,14 +6,11 @@ using UnityEngine.UI;
 
 public class GUIManagerScript : MonoBehaviour
 {
-    public enum gameState { PLAY, STOP};
-
     public GameObject player1;
     public GameObject player2;
     public GameObject PlaySimulate;
     public Text combatLogText;
     public ScrollRect scrollRect;
-    private gameState GS;
 
     //private Button[] p1Buttons;
     //private Button[] p2Buttons;
@@ -86,16 +83,10 @@ public class GUIManagerScript : MonoBehaviour
         if (scrollRect)
             scrollRect = scrollRect.GetComponent<ScrollRect>();
 
-        // GAME STATE
-        GS = gameState.STOP;
-        StopToPlay();
-
-        // load characters info
-        ReloadCharactersInfo();
-
+        StopInput();
     }
     
-    void ReloadCharactersInfo()
+    void UpdateInfo()
     {
         characterA = gameMan.GetSelectedCharA();
         characterB = gameMan.GetSelectedCharB();
@@ -113,10 +104,11 @@ public class GUIManagerScript : MonoBehaviour
         img[img.Length - 1].sprite = character.image;
 
         // stats , get text from parent of any of the plus or min button
-        buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + character.GetStat("life").baseValue.ToString() + " Total: " + character.GetStat("life").finalValue.ToString();
-        buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + character.GetStat("damage").baseValue.ToString() + " Total: " + character.GetStat("damage").finalValue.ToString();
-        buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + character.GetStat("armor").baseValue.ToString() + " Total: " + character.GetStat("armor").finalValue.ToString();
-        buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + character.GetStat("speed").baseValue.ToString() + " Total: " + character.GetStat("speed").finalValue.ToString();
+        buttons["ButtonPlusLvl"].GetComponentInParent<Text>().text = "Level : " + character.level;
+        buttons["ButtonPlusHp"].GetComponentInParent<Text>().text = "HP: " + character.GetStat("life").currentValue.ToString() + " Total: " + character.GetStat("life").finalValue.ToString();
+        buttons["ButtonPlusAtk"].GetComponentInParent<Text>().text = "ATK: " + character.GetStat("damage").currentValue.ToString() + " Total: " + character.GetStat("damage").finalValue.ToString();
+        buttons["ButtonPlusDef"].GetComponentInParent<Text>().text = "DEF: " + character.GetStat("armor").currentValue.ToString() + " Total: " + character.GetStat("armor").finalValue.ToString();
+        buttons["ButtonPlusSpeed"].GetComponentInParent<Text>().text = "SPEED: " + character.GetStat("speed").currentValue.ToString() + " Total: " + character.GetStat("speed").finalValue.ToString();
         // skills -----------------------
 
         int maxSkills = 4;
@@ -132,7 +124,7 @@ public class GUIManagerScript : MonoBehaviour
         {
             foreach (Action action in character.actions)
             {
-                buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.actionName;
+                 buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.actionName;
                 buttons[skillsToDisable[i]].gameObject.SetActive(true);
                 p1Buttons[skillsToDisable[i]].interactable = action.active;
                 ++i;
@@ -168,9 +160,8 @@ public class GUIManagerScript : MonoBehaviour
                 CSVManager.AppendToReport(battle.characterA, battle.characterB, numSimulations, numWins);
             }
         }
-        // ------------------------------------------
 
-        ReloadCharactersInfo();
+        UpdateInfo();
     }
 
     void OnButtonClick(string butName, int playerIndex)
@@ -209,53 +200,53 @@ public class GUIManagerScript : MonoBehaviour
                 }
             case "PlayButton":
                 {
-                    StartToPlay();
+                    PlayInput();
                    
                     break;
                 }
             case "StopButton":
                 {
-                    StopToPlay();
+                    StopInput();
                     break;
                 }
             case "ButtonPlusHp":
                 {
-                    selectedChar.GetStat("life").baseValue += 1.0f;
+                    selectedChar.GetStat("life").currentValue += 1.0f;
                     break;
                 }
             case "ButtonMinHp":
                 {
-                    selectedChar.GetStat("life").baseValue -= 1.0f; 
+                    selectedChar.GetStat("life").currentValue -= 1.0f; 
                     break;
                 }
             case "ButtonPlusAtk":
                 {
-                    selectedChar.GetStat("damage").baseValue += 1.0f;
+                    selectedChar.GetStat("damage").currentValue += 1.0f;
                     break;
                 }
             case "ButtonMinAtk":
                 {
-                    selectedChar.GetStat("damage").baseValue -= 1.0f;
+                    selectedChar.GetStat("damage").currentValue -= 1.0f;
                     break;
                 }
             case "ButtonPlusDef":
                 {
-                    selectedChar.GetStat("armor").baseValue += 1.0f;
+                    selectedChar.GetStat("armor").currentValue += 1.0f;
                     break;
                 }
             case "ButtonMinDef":
                 {
-                    selectedChar.GetStat("armor").baseValue -= 1.0f;
+                    selectedChar.GetStat("armor").currentValue -= 1.0f;
                     break;
                 }
             case "ButtonPlusSpeed":
                 {
-                    selectedChar.GetStat("speed").baseValue += 1.0f;
+                    selectedChar.GetStat("speed").currentValue += 1.0f;
                     break;
                 }
             case "ButtonMinSpeed":
                 {
-                    selectedChar.GetStat("speed").baseValue -= 1.0f;
+                    selectedChar.GetStat("speed").currentValue -= 1.0f;
                     break;
                 }
             case "prevCharacter":
@@ -302,12 +293,12 @@ public class GUIManagerScript : MonoBehaviour
                 }
             case "ButtonPlusLvl":
                 {
-                    // TODO
+                    ++selectedChar.level;
                     break;
                 }
             case "ButtonMinLvl":
                 {
-                    // TODO
+                    --selectedChar.level;
                     break;
                 }
             case "SimulateButton":
@@ -319,15 +310,11 @@ public class GUIManagerScript : MonoBehaviour
                 }
 
         }
-
-        // nerf this
-        ReloadCharactersInfo();
-
     }
 
-    void StartToPlay() // disable input for desired buttons
+    void PlayInput() // disable input for desired buttons
     {
-        GS = gameState.PLAY;
+
         gameButtons["StopButton"].gameObject.SetActive(true);
         gameButtons["PlayButton"].gameObject.SetActive(false);
         gameButtons["SimulateButton"].interactable = false;
@@ -348,9 +335,8 @@ public class GUIManagerScript : MonoBehaviour
 
     }
 
-    void StopToPlay()
+    void StopInput()
     {
-        GS = gameState.STOP;
         gameButtons["StopButton"].gameObject.SetActive(false);
         gameButtons["PlayButton"].gameObject.SetActive(true);
         gameButtons["SimulateButton"].interactable = true;

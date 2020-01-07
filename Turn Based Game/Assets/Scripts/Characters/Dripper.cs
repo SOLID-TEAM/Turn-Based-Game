@@ -9,8 +9,8 @@ public class Dripper : Character
         characterName = "Dripper";
 
         SetInitStatValue("life", 100f);
-        SetInitStatValue("damage", 8f);
-        SetInitStatValue("armor", 10f);
+        SetInitStatValue("damage", 35f);
+        SetInitStatValue("armor", 5f);
         SetInitStatValue("speed", 10f);
     }
     override public void SetActions()

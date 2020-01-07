@@ -36,14 +36,14 @@ public static class CSVManager
             string finalString = "";
             // character A and B -------------------------
             finalString += charA.name + reportSeparator;
-            foreach(Statistic baseStat in charA.statistics)
+            foreach(Statistic stat in charA.statistics)
             {
-                finalString += baseStat.baseValue.ToString() + reportSeparator;
+                finalString += stat.initValue.ToString() + reportSeparator;
             }
             finalString += charB.name + reportSeparator;
-            foreach (Statistic baseStat in charB.statistics)
+            foreach (Statistic stat in charB.statistics)
             {
-                finalString += baseStat.baseValue.ToString() + reportSeparator;
+                finalString += stat.initValue.ToString() + reportSeparator;
             }
             // -------------------------------------------
             // general info

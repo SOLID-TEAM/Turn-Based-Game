@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Statistic
 {
+    public delegate float LevelOperation(float value, float level);
+    LevelOperation levelOperation;
+
+    Character          character;
     List<StatModifier> statModifiers;
 
     public string   name;
@@ -32,21 +36,32 @@ public class Statistic
         }
     }
 
-    private float _baseValue; 
-    public float baseValue // Stat Value modified by game (ex. level)
+    private float _currentValue; 
+    public float currentValue // Stat Value modified by game (ex. level)
     {
         set 
         {
-            _baseValue = value;
-            _baseValue = Mathf.Clamp(_baseValue, min, max);
+            _currentValue = value;
+            _currentValue = Mathf.Clamp(_currentValue, min, max);
             UpdateFinalStat();
         }
 
         get
         {
-            return _baseValue;
+            return _currentValue;
         }
     }
+
+    private float _levelValue;
+
+    public float levelValue // Stat Value at some level
+    {
+        get
+        {
+            return levelOperation(initValue,character.level);
+        }
+    }
+
 
     private float _initValue;
     public float initValue // Stat Value at level 1
@@ -55,7 +70,7 @@ public class Statistic
         {
             _initValue = value;
             _initValue = Mathf.Clamp(_initValue, min, max);
-            baseValue = value;
+            currentValue = value;
         }
 
         get
@@ -64,33 +79,40 @@ public class Statistic
         }
     }
 
-    public Statistic(string name, float initValue, float min = 0f, float max = float.MaxValue)
+    public Statistic(Character character, string name, float initValue, LevelOperation levelOperator, float min = 0f, float max = float.MaxValue)
     {
         statModifiers = new List<StatModifier>();
 
+        this.character = character;
         this.name = name;
+        this.initValue = initValue;
+        this.levelOperation = levelOperator;
         this.min = min;
         this.max = max;
-        this.initValue = initValue;
     }
 
     public void SetInitValue()
     {
-        baseValue = initValue;
+        currentValue = initValue;
     }
+    public void SetValueByLevel()
+    {
+        currentValue = levelValue;
+    }
+
     public void UpdateFinalStat()
     {
-        _finalValue = _baseValue;
+        _finalValue = _currentValue;
 
         foreach (StatModifier mod in statModifiers)
         {
             switch (mod.type)
             {
                 case StatModType.addPercent:
-                    _finalValue += mod.modValue * _baseValue;
+                    _finalValue += mod.modValue * _currentValue;
                     break;
                 case StatModType.subPercent:
-                    _finalValue -= mod.modValue * _baseValue;
+                    _finalValue -= mod.modValue * _currentValue;
                     break;
                 case StatModType.addTotal:
                     _finalValue += mod.modValue;

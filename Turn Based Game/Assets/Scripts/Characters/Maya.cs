@@ -9,8 +9,8 @@ public class Maya : Character
         characterName = "Maya";
 
         SetInitStatValue("life", 100f);
-        SetInitStatValue("damage", 8f);
-        SetInitStatValue("armor", 10f);
+        SetInitStatValue("damage", 20f);
+        SetInitStatValue("armor", 3f);
         SetInitStatValue("speed", 10f);
     }
     override public void SetActions()

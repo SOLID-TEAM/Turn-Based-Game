@@ -5,6 +5,20 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [HideInInspector]public string  characterName;
+
+    private int   _level = 0;
+    public int level
+    {
+        set
+        {
+            _level = Mathf.Clamp(value, 0, 100);
+        }
+        get
+        {
+            return _level;
+        }
+    }
+
     public List<Action>    actions;
     public List<Statistic> statistics;
     public List<Buff>      buffs;
@@ -22,12 +36,11 @@ public class Character : MonoBehaviour
 
         statistics = new List<Statistic>();
 
-        statistics.Add(new Statistic("life",    1f));
-        statistics.Add(new Statistic("damage",  1f));
-        statistics.Add(new Statistic("armor",   1f));
-        statistics.Add(new Statistic("speed",   1f));
-        statistics.Add(new Statistic("avoid",   0f, 0f, 1f));
-        statistics.Add(new Statistic("level",   1f));
+        statistics.Add(new Statistic(this, "life",    1f, (value, level)=> value * 0.1f * level));
+        statistics.Add(new Statistic(this, "damage",  1f, (value, level) => value * 0.1f * level));
+        statistics.Add(new Statistic(this, "armor",   1f, (value, level) => value * 0.1f * level));
+        statistics.Add(new Statistic(this, "speed",   1f, (value, level)=> value * 0.1f * level));
+        statistics.Add(new Statistic(this, "avoid",   0f, (value, level) => value * 0.1f * level, 0f, 1f));
 
         SetDefaultValues();  // Virtual for each character 
 
@@ -43,24 +56,28 @@ public class Character : MonoBehaviour
     // Life functions ----------------------------------
     public void AddLife(float heal)
     {
-        GetStat("life").baseValue += heal;
+        GetStat("life").currentValue += heal;
     }
     public void ApplyDamage(float damage)
     {
         float avoidProbability = GetStat("avoid").finalValue;
-        
-        if (avoidProbability > 0f)
+        damage -= GetStat("armor").finalValue;
+
+
+        if (avoidProbability > 0f) 
         {
             float random = Random.Range(0f, 1f);
 
             if (random < avoidProbability)
             {
-                Debug.Log(characterName + "avoid " + damage.ToString());
+                Debug.Log(characterName + " avoid " + damage.ToString() + "damage");
                 return;
             }
+            
         }
 
-        GetStat("life").baseValue -= damage;
+        Debug.Log(characterName + " recive " + damage.ToString() + " damage");
+        GetStat("life").currentValue -= damage;
     }
 
     // Turn functions --------------------------------
@@ -82,8 +99,9 @@ public class Character : MonoBehaviour
         //{
             List<Action> activeActions = GetPosibleActions();
             Action action = activeActions[Random.Range(0, activeActions.Count)];
+            Debug.Log(characterName + " execute " + action.actionName);
             action.Execute(this, opponent);
-            Debug.Log( characterName + " execute " + action.actionName);
+   
             return true;
         //}
 
@@ -112,7 +130,7 @@ public class Character : MonoBehaviour
 
         if (statistic == null) return;
 
-        statistic.baseValue += statistic.baseValue;
+        statistic.currentValue += statistic.currentValue;
     }
     public void SubToBaseStat(string name, float value)
     {
@@ -120,7 +138,7 @@ public class Character : MonoBehaviour
 
         if (statistic == null) return;
 
-        statistic.baseValue -= value;
+        statistic.currentValue -= value;
     }
     public void SetInitStatValue(string name, float value)
     {

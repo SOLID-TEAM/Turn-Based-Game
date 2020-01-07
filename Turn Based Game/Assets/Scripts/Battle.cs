@@ -63,11 +63,11 @@ public class Battle
 
         if (characterA != null && characterB != null)
         {
-            if (characterA.GetStat("life").baseValue == 0)
+            if (characterA.GetStat("life").currentValue == 0)
             {
                 winner =  characterA;
             }
-            else if (characterB.GetStat("life").baseValue == 0)
+            else if (characterB.GetStat("life").currentValue == 0)
             {
                 winner =  characterB;
             }
