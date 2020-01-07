@@ -7,9 +7,13 @@ public class Character : MonoBehaviour
     public List<Action>    actions;
     public List<Statistic> statistics;
     public List<Buff>      buffs;
+    
+    [HideInInspector]
+    public Sprite image;
 
     virtual public void SetDefaultValues() {}
     virtual public void SetActions() {}
+    virtual public void SetImage() {}
 
     void Start()
     {
@@ -33,6 +37,8 @@ public class Character : MonoBehaviour
         actions = new List<Action>();
 
         SetActions(); // Virtual for each character 
+
+        SetImage();
 
     }
     public void ResetStats()
