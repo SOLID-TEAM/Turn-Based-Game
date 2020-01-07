@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
         {
             case MyEventType.BattleFinished:
                 {
-                    if (battle.winnerChar == battle.characterA)
+                    if (battle.winnerChar == GetSelectedCharA())
                     {
                         ++winBattles;
                     }

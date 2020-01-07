@@ -65,11 +65,11 @@ public class Battle
         {
             if (characterA.GetStat("life").currentValue == 0f)
             {
-                winner =  characterA;
+                winner =  characterB;
             }
             else if (characterB.GetStat("life").currentValue == 0f)
             {
-                winner =  characterB;
+                winner =  characterA;
             }
         }
 
