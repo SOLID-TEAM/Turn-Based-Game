@@ -9,7 +9,7 @@ public class Conversor : Character
         characterName = "Conversor";
 
         SetInitStatValue("life",   100f);
-        SetInitStatValue("damage", 8f);
+        SetInitStatValue("damage", 35f);
         SetInitStatValue("armor",  10f);
         SetInitStatValue("speed",  10f);
     }

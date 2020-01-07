@@ -110,10 +110,12 @@ public class Battle
     }
     public void WaitTurn()
     {
-        if (currentChar.WaitTurn(GetOpponent())) 
-        {
-            battleState = BattleState.endTurn;
-        }
+        //if (currentChar.WaitTurn(GetOpponent())) 
+        //{
+        //    battleState = BattleState.endTurn;
+        //}
+        currentChar.WaitTurn(GetOpponent());
+        battleState = BattleState.endTurn;
     }
     public void EndTurn()
     {

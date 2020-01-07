@@ -78,16 +78,16 @@ public class Character : MonoBehaviour
     }
     public bool WaitTurn(Character opponent)
     {
-        if (Input.GetKey(KeyCode.P))
-        {
+        //if (Input.GetKey(KeyCode.P))
+        //{
             List<Action> activeActions = GetPosibleActions();
             Action action = activeActions[Random.Range(0, activeActions.Count)];
             action.Execute(this, opponent);
             Debug.Log( characterName + " execute " + action.actionName);
             return true;
-        }
+        //}
 
-        return false;
+        //return false;
     }
     public void EndTurn()
     {
