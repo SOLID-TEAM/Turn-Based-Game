@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameState {stopSimulation, WaitSimulation, StartSimulation, EndSimulation}
-public enum CharacterType { Maya = 0, Dripper = 1, Conversor = 2}
+public enum GameState {StopSimulation, WaitSimulation, StartSimulation, EndSimulation, WaitResetSimulation ,ResetSimulation}
+public enum CharacterType { Maya = 0, Dripper = 1, Conversor = 2, Max = 3}
 public enum MyEventType { BattleFinished, BuffDestroyed, CharDestroyed, Unknown}
 public class MyEvent
 {
@@ -19,7 +19,7 @@ public class MyEvent
 public class GameManager : MonoBehaviour
 {
 
-    private GameState gameState = GameState.stopSimulation;
+    private GameState gameState = GameState.StopSimulation;
     public CharacterType selectedCharA;
     public CharacterType selectedCharB;
 
@@ -35,9 +35,10 @@ public class GameManager : MonoBehaviour
     public bool controlCharacterA = true;
     public bool controlCharacterB = true;
 
-    public int  currentSimulation;
-    public int  numSimulations = 30;
-
+    public int    currentSimulation;
+    public int    numSimulations = 10;
+    public float  winBattles = 0;
+    public float  loseBattles = 0;
 
     private void Awake()
     {
@@ -92,6 +93,20 @@ public class GameManager : MonoBehaviour
                 }
             case GameState.EndSimulation:
                 {
+                    // TODO: Get data and write excel 
+                    gameState = GameState.WaitResetSimulation;
+                    break;
+                }
+            case GameState.WaitResetSimulation:
+                {
+                    // TODO: Button to reset simulation
+                    gameState = GameState.ResetSimulation;
+                    break;
+                }
+            case GameState.ResetSimulation:
+                {
+                    ResetSimulation();
+                    
                     break;
                 }
         }
@@ -99,7 +114,17 @@ public class GameManager : MonoBehaviour
 
     public void StartSimulation()
     {
+        gameState = GameState.StartSimulation;
+    }
 
+    public void ResetSimulation()
+    {
+        battle.characterA.Reset();
+        battle.characterB.Reset();
+        winBattles = 0;
+        loseBattles = 0;
+
+        gameState = GameState.StopSimulation;
     }
 
     public void Events(MyEvent myEvent)
@@ -108,8 +133,14 @@ public class GameManager : MonoBehaviour
         {
             case MyEventType.BattleFinished:
                 {
-                    battle.characterA.ResetStats();
-                    battle.characterB.ResetStats();
+                    if (battle.winnerChar == battle.characterA)
+                    {
+                        ++winBattles;
+                    }
+                    else
+                    {
+                        ++loseBattles;
+                    }
 
                     if(--currentSimulation == 0)
                     {
@@ -117,6 +148,8 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
+                        battle.characterA.Reset();
+                        battle.characterB.Reset();
                         battle.StartBattle(GetSelectedCharA(), GetSelectedCharB());
                     }
 
@@ -126,7 +159,6 @@ public class GameManager : MonoBehaviour
     }
 
     // Get Selected ----------------------------------
-
     public Character GetSelectedCharA()
     {
         return charSelectionA[(int)selectedCharA];

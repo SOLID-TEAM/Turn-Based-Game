@@ -2700,6 +2700,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 847575406, guid: 6da0750aa74f1a047be64e9f8d11c81a, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1425597498, guid: 6da0750aa74f1a047be64e9f8d11c81a, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0

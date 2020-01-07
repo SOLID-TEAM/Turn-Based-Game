@@ -9,8 +9,8 @@ public class Battle
 
     public Character characterA;
     public Character characterB;
-    Character currentChar;
-    Character winnerChar;
+    public Character currentChar;
+    public Character winnerChar;
 
     List<Character> roundList;
 
@@ -51,8 +51,12 @@ public class Battle
         }
     }
 
-    // Win/Lose Conditions ----------------------
+    public Character GetOpponent()
+    {
+        return (currentChar == characterA) ? characterB : characterA;
+    }
 
+    // Win/Lose Conditions ----------------------
     public void CheckWinner()
     {
         Character winner = null;
@@ -89,6 +93,7 @@ public class Battle
     }
     public void EndBattle()
     {
+        round = 1;
         battleState = BattleState.waitBattle;
         Object.FindObjectOfType<GameManager>().Events(new MyEvent(MyEventType.BattleFinished, null));
     }
@@ -105,7 +110,7 @@ public class Battle
     }
     public void WaitTurn()
     {
-        if (currentChar.WaitTurn())
+        if (currentChar.WaitTurn(GetOpponent())) 
         {
             battleState = BattleState.endTurn;
         }

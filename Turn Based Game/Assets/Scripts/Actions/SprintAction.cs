@@ -6,8 +6,12 @@ public class SprintAction : Action
 {
     public SprintAction()
     {
-        name = "Sprint";
+        actionName = "Sprint";
         cooldown = 4;
         finishTurn = false;
+    }
+    override public void ExecuteAction(Character owner, Character opponent)
+    {
+        owner.AddBuff(new SpeedBuff(owner));
     }
 }

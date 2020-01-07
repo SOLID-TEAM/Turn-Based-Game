@@ -9,9 +9,9 @@ public class Conversor : Character
         characterName = "Conversor";
 
         SetInitStatValue("life",   100f);
-        SetInitStatValue("damage", 100f);
-        SetInitStatValue("armor",  100f);
-        SetInitStatValue("speed",  100f);
+        SetInitStatValue("damage", 8f);
+        SetInitStatValue("armor",  10f);
+        SetInitStatValue("speed",  10f);
     }
     override public void SetActions() 
     {

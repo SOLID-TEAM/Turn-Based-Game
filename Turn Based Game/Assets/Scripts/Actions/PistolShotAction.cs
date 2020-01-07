@@ -6,8 +6,12 @@ public class PistolShotAction : Action
 {
     public PistolShotAction()
     {
-        name = "Pistol Shot";
+        actionName = "Pistol Shot";
         cooldown = 1;
         finishTurn = true;
+    }
+    override public void ExecuteAction(Character owner, Character opponent)
+    {
+        opponent.ApplyDamage(owner.GetStat("damage").finalValue);
     }
 }

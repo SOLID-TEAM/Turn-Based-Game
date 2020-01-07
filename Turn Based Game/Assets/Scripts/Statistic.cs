@@ -16,6 +16,7 @@ public class Statistic
         set
         {
             _finalValue = value;
+            _finalValue = Mathf.Clamp(_finalValue, min, max);
         }
 
         get
@@ -23,6 +24,7 @@ public class Statistic
             if (update)
             {
                 UpdateFinalStat();
+                _finalValue = Mathf.Clamp(_finalValue, min, max);
                 update = false;
             }
 
@@ -36,6 +38,7 @@ public class Statistic
         set 
         {
             _baseValue = value;
+            _baseValue = Mathf.Clamp(_baseValue, min, max);
             UpdateFinalStat();
         }
 
@@ -51,6 +54,7 @@ public class Statistic
         set
         {
             _initValue = value;
+            _initValue = Mathf.Clamp(_initValue, min, max);
             baseValue = value;
         }
 
@@ -60,7 +64,7 @@ public class Statistic
         }
     }
 
-    public Statistic(string name, float initValue, float min = 0f, float max = 9999f)
+    public Statistic(string name, float initValue, float min = 0f, float max = float.MaxValue)
     {
         statModifiers = new List<StatModifier>();
 
@@ -82,16 +86,22 @@ public class Statistic
         {
             switch (mod.type)
             {
-                case StatModType.multiply:
-                    _finalValue *= mod.modValue;
+                case StatModType.addPercent:
+                    _finalValue += mod.modValue * _baseValue;
+                    break;
+                case StatModType.subPercent:
+                    _finalValue -= mod.modValue * _baseValue;
                     break;
                 case StatModType.addTotal:
                     _finalValue += mod.modValue;
                     break;
+                case StatModType.subPercentTotal:
+                    _finalValue *= 1f - mod.modValue;
+                    break;
             }
         }
     }
-    public void AddModifier( Buff buff, float value, StatModType type = StatModType.multiply)
+    public void AddModifier( Buff buff, float value, StatModType type = StatModType.addPercent)
     {
         StatModifier statModifier = new StatModifier(this, buff, value, type);
         statModifiers.Add(statModifier);

@@ -11,9 +11,10 @@ public class Buff
     public Buff(Character character) 
     {
         this.character = character;
+        StartTurnEffect();
+        ApplyStatModifiers();
     }
     public virtual void StartTurnEffect() {}
-    public virtual void AvoidActionEffect() {}
     public virtual void ApplyStatModifiers() {}
 
     public void AddModifier( string statName, float modValue, StatModType type)
@@ -27,15 +28,15 @@ public class Buff
 
         if (turnsDuration == 0)
         {
+            Destroy();
             return true;
         }
 
         return false;
     }
-
-    ~Buff()
+    public void Destroy()
     {
-        character.Events(new MyEvent(MyEventType.BuffDestroyed, this ));
+        character.Events(new MyEvent(MyEventType.BuffDestroyed, this));
     }
 }
 
@@ -48,17 +49,32 @@ public class PoisonBuff : Buff
     }
     public override void StartTurnEffect() 
     {
-        Statistic life = character.GetStat("life");
-        life.baseValue -= 100f;
+        character.ApplyDamage(10f);
     }
-
 }
 
 public class SpeedBuff : Buff
 {
     public SpeedBuff(Character character) : base(character)
     {
-        name = "Speed";
+        name = "+ Speed";
         turnsDuration = 3;
+    }
+    override public void ApplyStatModifiers() 
+    {
+        AddModifier("speed", 0.2f, StatModType.addPercent);
+    }
+}
+
+public class AvoidBuff : Buff
+{
+    public AvoidBuff(Character character) : base(character)
+    {
+        name = "+ Avoid";
+        turnsDuration = 3;
+    }
+    override public void ApplyStatModifiers()
+    {
+        AddModifier("avoid", 0.5f, StatModType.addTotal);
     }
 }

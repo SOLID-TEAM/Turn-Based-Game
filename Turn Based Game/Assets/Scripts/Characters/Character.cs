@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Character : MonoBehaviour
 {
     [HideInInspector]public string  characterName;
@@ -17,36 +18,49 @@ public class Character : MonoBehaviour
 
     void Start()
     {
-        // Add buffs ------------------------------------
-
-        buffs = new List<Buff>();
-
         // Add statistics -------------------------------
 
         statistics = new List<Statistic>();
 
-        statistics.Add(new Statistic("life",    100f));
-        statistics.Add(new Statistic("damage",  100f));
-        statistics.Add(new Statistic("armor",   100f));
-        statistics.Add(new Statistic("speed",   100f));
+        statistics.Add(new Statistic("life",    1f));
+        statistics.Add(new Statistic("damage",  1f));
+        statistics.Add(new Statistic("armor",   1f));
+        statistics.Add(new Statistic("speed",   1f));
+        statistics.Add(new Statistic("avoid",   0f, 0f, 1f));
+        statistics.Add(new Statistic("level",   1f));
 
         SetDefaultValues();  // Virtual for each character 
 
         // Add actions ----------------------------------
 
         actions = new List<Action>();
+        buffs = new List<Buff>();
 
         SetActions(); // Virtual for each character 
-
         SetImage();
-
     }
-    public void ResetStats()
+
+    // Life functions ----------------------------------
+    public void AddLife(float heal)
     {
-        foreach(Statistic stat in statistics)
+        GetStat("life").baseValue += heal;
+    }
+    public void ApplyDamage(float damage)
+    {
+        float avoidProbability = GetStat("avoid").finalValue;
+        
+        if (avoidProbability > 0f)
         {
-            stat.SetInitValue();
+            float random = Random.Range(0f, 1f);
+
+            if (random < avoidProbability)
+            {
+                Debug.Log(characterName + "avoid " + damage.ToString());
+                return;
+            }
         }
+
+        GetStat("life").baseValue -= damage;
     }
 
     // Turn functions --------------------------------
@@ -56,24 +70,28 @@ public class Character : MonoBehaviour
         {
             buff.StartTurnEffect();
         }
-    }
 
-    public bool WaitTurn()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
+        foreach (Action action in actions)
         {
+            action.UpdateCooldown();
+        }
+    }
+    public bool WaitTurn(Character opponent)
+    {
+        if (Input.GetKey(KeyCode.P))
+        {
+            List<Action> activeActions = GetPosibleActions();
+            Action action = activeActions[Random.Range(0, activeActions.Count)];
+            action.Execute(this, opponent);
+            Debug.Log( characterName + " execute " + action.actionName);
             return true;
         }
 
         return false;
     }
-
     public void EndTurn()
     {
-        if (buffs.Count > 0)
-        {
-            buffs.RemoveAll(item => item.CheckBuffDuration());
-        }
+         buffs.RemoveAll(item => item.CheckBuffDuration());
     }   
 
     // Stats functions --------------------------------
@@ -112,12 +130,40 @@ public class Character : MonoBehaviour
 
         statistic.initValue = value;
     }
+    public void Reset()
+    {
+        foreach (Statistic stat in statistics)
+        {
+            stat.SetInitValue();
+        }
+
+        foreach (Action action in actions)
+        {
+            action.Reset();
+        }
+
+        foreach(Buff buff in buffs)
+        {
+            buff.Destroy();
+        }
+        buffs.Clear();
+    }
 
     // Actions functions ---------------------------
-
     public void AddAction( Action action)
     {
         actions.Add(action);
+    }
+
+    public List<Action> GetPosibleActions()
+    {
+        return actions.FindAll(item => item.active == true);
+    }
+
+    // Buff functions -----------------------------
+    public void AddBuff(Buff buff)
+    {
+        buffs.Add(buff);
     }
 
     // Events --------------------------------------

@@ -6,8 +6,12 @@ public class AvoidAction : Action
 {
     public AvoidAction()
     {
-        name = "Avoid";
+        actionName = "Avoid";
         cooldown = 4;
         finishTurn = false;
+    }
+    override public void ExecuteAction(Character owner, Character opponent)
+    {
+
     }
 }
