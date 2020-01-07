@@ -51,13 +51,12 @@ public class Statistic
         }
     }
 
-    private float _levelValue;
-
     public float levelValue // Stat Value at some level
     {
         get
         {
-            return levelOperation(initValue,character.level);
+            float var = levelOperation(initValue, character.level);
+            return  var;
         }
     }
 

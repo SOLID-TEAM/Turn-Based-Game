@@ -15,10 +15,8 @@ public class Conversor : Character
     }
     override public void SetActions() 
     {
-        AddAction(new PistolShotAction());
+        AddAction(new SharpClawAction());
         AddAction(new SprintAction());
-        AddAction(new AvoidAction());
-        AddAction(new BloodBagAction());
     }
     public override void SetImage()
     {

@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
             case GameState.ResetSimulation:
                 {
                     ResetSimulation();
-                    
                     break;
                 }
         }

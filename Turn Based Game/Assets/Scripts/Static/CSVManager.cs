@@ -39,13 +39,13 @@ public static class CSVManager
             foreach(Statistic stat in charA.statistics)
             {
                 if (stat.name == "avoid") continue;
-                finalString += stat.initValue.ToString() + reportSeparator;
+                finalString += stat.levelValue.ToString() + reportSeparator;
             }
             finalString += charB.characterName + reportSeparator;
             foreach (Statistic stat in charB.statistics)
             {
                 if (stat.name == "avoid") continue;
-                finalString += stat.initValue.ToString() + reportSeparator;
+                finalString += stat.levelValue.ToString() + reportSeparator;
             }
             // -------------------------------------------
             // general info

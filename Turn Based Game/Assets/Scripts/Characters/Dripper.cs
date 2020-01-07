@@ -15,10 +15,9 @@ public class Dripper : Character
     }
     override public void SetActions()
     {
-        AddAction(new PistolShotAction());
-        AddAction(new SprintAction());
-        AddAction(new AvoidAction());
-        AddAction(new BloodBagAction());
+        AddAction(new VenomSpittleAction());
+        AddAction(new ShellAction());
+        AddAction(new LeaderAction());
     }
     public override void SetImage()
     {

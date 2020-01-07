@@ -32,15 +32,17 @@ public class Character : MonoBehaviour
 
     void Start()
     {
+        level = 0;
+
         // Add statistics -------------------------------
 
         statistics = new List<Statistic>();
 
-        statistics.Add(new Statistic(this, "life",    1f, (value, level)=> value * 0.1f * level));
-        statistics.Add(new Statistic(this, "damage",  1f, (value, level) => value * 0.1f * level));
-        statistics.Add(new Statistic(this, "armor",   1f, (value, level) => value * 0.1f * level));
-        statistics.Add(new Statistic(this, "speed",   1f, (value, level)=> value * 0.1f * level));
-        statistics.Add(new Statistic(this, "avoid",   0f, (value, level) => value * 0.1f * level, 0f, 1f));
+        statistics.Add(new Statistic(this, "life",    1f, (value, level) => value + value * 0.1f * level));
+        statistics.Add(new Statistic(this, "damage",  1f, (value, level) => value + value * 0.1f * level));
+        statistics.Add(new Statistic(this, "armor",   1f, (value, level) => value + value * 0.1f * level));
+        statistics.Add(new Statistic(this, "speed",   1f, (value, level) => value + value * 0.1f * level));
+        statistics.Add(new Statistic(this, "avoid",   0f, (value, level) => value + value * 0.1f * level, 0f, 1f));
 
         SetDefaultValues();  // Virtual for each character 
 

@@ -234,6 +234,8 @@ MonoBehaviour:
   controlCharacterB: 1
   currentSimulation: 0
   numSimulations: 30
+  winBattles: 0
+  loseBattles: 0
 --- !u!4 &72417368
 Transform:
   m_ObjectHideFlags: 0

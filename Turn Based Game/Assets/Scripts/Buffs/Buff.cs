@@ -78,3 +78,29 @@ public class AvoidBuff : Buff
         AddModifier("avoid", 0.5f, StatModType.addTotal);
     }
 }
+
+public class ArmorBuff : Buff
+{
+    public ArmorBuff(Character character) : base(character)
+    {
+        name = "+ Armor";
+        turnsDuration = 3;
+    }
+    override public void ApplyStatModifiers()
+    {
+        AddModifier("armor", 0.2f, StatModType.addPercent);
+    }
+}
+
+public class DamageBuff : Buff
+{
+    public DamageBuff(Character character) : base(character)
+    {
+        name = "+ Damage";
+        turnsDuration = 3;
+    }
+    override public void ApplyStatModifiers()
+    {
+        AddModifier("damage", 0.2f, StatModType.addPercent);
+    }
+}
