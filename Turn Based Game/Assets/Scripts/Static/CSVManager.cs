@@ -6,7 +6,7 @@ public static class CSVManager
 {
     private static string reportFolderName = "Report";
     private static string reportFileName = "BattleInfo.csv";
-    private static string reportSeparator = ","; // CSV separator for columns
+    private static string reportSeparator = ";"; // CSV separator for columns
 
     private static string[] reportHeaders = new string[14]
     {
