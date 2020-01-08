@@ -96,7 +96,6 @@ public class Battle
         round = 1;
         battleState = BattleState.waitBattle;
         Object.FindObjectOfType<GameManager>().Events(new MyEvent(MyEventType.BattleFinished, null));
-        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry("Battle ended");
     }
 
     public void ResetBattle()
@@ -113,7 +112,6 @@ public class Battle
         currentChar = roundList[0];
 
         Debug.Log("Start Turn " + currentChar.characterName);
-        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry("Start Turn " + currentChar.characterName);
         currentChar.StartTurn();
 
         battleState = BattleState.waitTurn;
@@ -130,7 +128,6 @@ public class Battle
     public void EndTurn()
     {
         Debug.Log("End Turn " + currentChar.characterName);
-        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry("End Turn " + currentChar.characterName);
 
         currentChar.EndTurn();
         roundList.Remove(currentChar);
@@ -148,10 +145,7 @@ public class Battle
     // Round Functions -------------------------
     public void StartRound()
     {
-        string debug_str = "Start Round : " + round.ToString();
-        Debug.Log(debug_str);
-        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(debug_str);
-
+        Debug.Log("Start Round : " + round.ToString());
         roundList.Clear();
         roundList.Add(characterA);
         roundList.Add(characterB);
@@ -161,9 +155,7 @@ public class Battle
     }
     public void EndRound()
     {
-        string debug_str = "End Round : " + round.ToString();
-        Debug.Log(debug_str);
-        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(debug_str);
+        Debug.Log("End Round : " + round.ToString());
         ++round;
 
         battleState = BattleState.startRound;

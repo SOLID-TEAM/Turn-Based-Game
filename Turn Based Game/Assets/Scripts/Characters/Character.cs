@@ -65,9 +65,6 @@ public class Character : MonoBehaviour
         float avoidProbability = GetStat("avoid").finalValue;
         damage -= GetStat("armor").finalValue;
 
-        GUIManagerScript gui = Object.FindObjectOfType<GUIManagerScript>();
-        string debug_string = "";
-
 
         if (avoidProbability > 0f) 
         {
@@ -75,17 +72,13 @@ public class Character : MonoBehaviour
 
             if (random < avoidProbability)
             {
-                debug_string = characterName + " avoid " + damage.ToString() + "damage";
-                Debug.Log(debug_string);
-                gui.AddCombatLogEntry(debug_string);
+                Debug.Log(characterName + " avoid " + damage.ToString() + "damage");
                 return;
             }
             
         }
 
-        debug_string = characterName + " recive " + damage.ToString() + " damage";
-        Debug.Log(debug_string);
-        gui.AddCombatLogEntry(debug_string);
+        Debug.Log(characterName + " recive " + damage.ToString() + " damage");
         GetStat("life").currentValue -= damage;
     }
 
@@ -109,7 +102,6 @@ public class Character : MonoBehaviour
             List<Action> activeActions = GetPosibleActions();
             Action action = activeActions[Random.Range(0, activeActions.Count)];
             Debug.Log(characterName + " execute " + action.actionName);
-            Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(characterName + " execute " + action.actionName);
             action.Execute(this, opponent);
    
             return true;
