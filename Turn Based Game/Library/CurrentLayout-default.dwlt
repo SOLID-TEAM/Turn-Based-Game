@@ -557,7 +557,7 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 642d0000
+      m_SelectedIDs: b62b0000
       m_LastClickedID: 0
       m_ExpandedIDs: 74fbffff
       m_RenameOverlay:
@@ -622,19 +622,19 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Characters
+    - Assets/Scripts/Static
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/Characters
+  - Assets/Scripts/Static
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Documentos\GitHub Projects\Turn-Based-Game\Turn Based Game
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 94360000
-    m_LastClickedID: 13972
+    m_SelectedIDs: 96360000
+    m_LastClickedID: 13974
     m_ExpandedIDs: 000000006e36000070360000723600007436000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0

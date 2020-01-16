@@ -11,18 +11,18 @@ public static class CSVManager
     private static string[] reportHeaders = new string[16]
     {
         "Character A",
-        "LVL",
         "HP",
         "ATK",
         "DEF",
         "SPEED",
+        "LVL",
         "Character B",
         "HP",
         "ATK",
         "DEF",
         "SPEED",
-         "LVL",
         "Num Simulations",
+         "LVL",
         "Num Wins",
         "Num Defeats",
         "Win Rate"
