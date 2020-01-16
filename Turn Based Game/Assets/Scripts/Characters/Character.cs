@@ -6,7 +6,7 @@ public class Character : MonoBehaviour
 {
     [HideInInspector]public string  characterName;
 
-    private int   _level = 0;
+    private int   _level = 50;
     public int level
     {
         set
@@ -65,6 +65,9 @@ public class Character : MonoBehaviour
         float avoidProbability = GetStat("avoid").finalValue;
         damage -= GetStat("armor").finalValue;
 
+        GUIManagerScript gui = Object.FindObjectOfType<GUIManagerScript>();
+        string debug_string = "";
+
 
         if (avoidProbability > 0f) 
         {
@@ -72,13 +75,17 @@ public class Character : MonoBehaviour
 
             if (random < avoidProbability)
             {
-                Debug.Log(characterName + " avoid " + damage.ToString() + "damage");
+                debug_string = characterName + " avoid " + damage.ToString() + "damage";
+                Debug.Log(debug_string);
+                gui.AddCombatLogEntry(debug_string);
                 return;
             }
             
         }
 
-        Debug.Log(characterName + " recive " + damage.ToString() + " damage");
+        debug_string = characterName + " recive " + damage.ToString() + " damage";
+        Debug.Log(debug_string);
+        gui.AddCombatLogEntry(debug_string);
         GetStat("life").currentValue -= damage;
     }
 
@@ -95,19 +102,44 @@ public class Character : MonoBehaviour
             action.UpdateCooldown();
         }
     }
-    public bool WaitTurn(Character opponent)
+    public void DoRandomTurn(Character opponent)
     {
-        //if (Input.GetKey(KeyCode.P))
-        //{
+        bool endTurn = false;
+
+        while(endTurn == false)
+        {
             List<Action> activeActions = GetPosibleActions();
+
+            if (activeActions.Count == 0)
+            {
+                break;
+            }
+
             Action action = activeActions[Random.Range(0, activeActions.Count)];
             Debug.Log(characterName + " execute " + action.actionName);
+            Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(characterName + " execute " + action.actionName);
             action.Execute(this, opponent);
-   
-            return true;
-        //}
 
-        //return false;
+            if (action.finishTurn == true)
+            {
+                break;
+            }
+        }
+    }
+    public void DoOnlyAction( int actionNum , Character opponent)
+    {
+        if (actions.Count > actionNum)
+        {
+            Action action = actions[actionNum];
+            if (action.active == true)
+            {
+                Debug.Log(characterName + " execute " + action.actionName);
+                Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(characterName + " execute " + action.actionName);
+                action.Execute(this, opponent);
+            }
+
+            DoRandomTurn(opponent);
+        }
     }
     public void EndTurn()
     {
@@ -167,6 +199,14 @@ public class Character : MonoBehaviour
             buff.Destroy();
         }
         buffs.Clear();
+    }
+
+    public void SetLevelValues()
+    {
+        foreach (Statistic stat in statistics)
+        {
+            stat.SetValueByLevel();
+        }
     }
 
     // Actions functions ---------------------------

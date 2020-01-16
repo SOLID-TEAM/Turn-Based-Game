@@ -123,9 +123,9 @@ public class GUIManagerScript : MonoBehaviour
         // skills -----------------------
 
         int maxSkills = 4;
-        for (int x = maxSkills; x > 0; x--)
+        for (int x = maxSkills; x > 0; --x)
         {
-            buttons[skillsToDisable[x - 1]].interactable = false;
+            //buttons[skillsToDisable[x - 1]].interactable = false;
             buttons[skillsToDisable[x - 1]].gameObject.SetActive(false);
         }
 
@@ -137,7 +137,7 @@ public class GUIManagerScript : MonoBehaviour
             {
                  buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.actionName;
                 buttons[skillsToDisable[i]].gameObject.SetActive(true);
-                p1Buttons[skillsToDisable[i]].interactable = action.active;
+                //p1Buttons[skillsToDisable[i]].interactable = action.active;
                 ++i;
             }
         }
@@ -147,32 +147,40 @@ public class GUIManagerScript : MonoBehaviour
             {
                 buttons[skillsToDisable[i]].GetComponentInChildren<Text>().text = action.actionName;
                 buttons[skillsToDisable[i]].gameObject.SetActive(true);
-                p1Buttons[skillsToDisable[i]].interactable = false;
+                //p1Buttons[skillsToDisable[i]].interactable = false;
                 ++i;
             }
         }
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        //// TESTING - REMOVE ------------------------
-        //if (Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    for (int i = 0; i < 10; ++i)
-        //    {
-                
-        //        Battle battle = gameMan.GetBattleInfo();
-        //        int numSimulations = 1;
-        //        int numWins = 0;
-
-        //        CSVManager.AppendToReport(battle.characterA, battle.characterB, numSimulations, numWins);
-        //    }
-        //}
-
         UpdateInfo();
+
+        if (gameMan.gameState == GameState.StopSimulation)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                int numSimulations = int.Parse(gameButtons["SimulateButton"].GetComponentInChildren<InputField>().text);
+                gameMan.StartSimulation(numSimulations, false, 0);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                int numSimulations = int.Parse(gameButtons["SimulateButton"].GetComponentInChildren<InputField>().text);
+                gameMan.StartSimulation(numSimulations, false, 1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                int numSimulations = int.Parse(gameButtons["SimulateButton"].GetComponentInChildren<InputField>().text);
+                gameMan.StartSimulation(numSimulations, false, 2);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                int numSimulations = int.Parse(gameButtons["SimulateButton"].GetComponentInChildren<InputField>().text);
+                gameMan.StartSimulation(numSimulations, false, 3);
+            }
+        }
     }
 
     void OnButtonClick(string butName, int playerIndex)
@@ -185,34 +193,39 @@ public class GUIManagerScript : MonoBehaviour
         //AddCombatLogEntry(playerIndex, playerIndex == 0 ? 1 : 0, action);
 
         Character selectedChar = playerIndex == 0 ? characterA : characterB;
-      
+
+        if (gameMan.gameState != GameState.StopSimulation)
+        {
+            switch (butName)
+            {
+                case "Skill1Button":
+                    {
+                        gameMan.GetBattleInfo().DoAction(0);
+                        break;
+                    }
+                case "Skill2Button":
+                    {
+                        gameMan.GetBattleInfo().DoAction(1);
+                        break;
+                    }
+                case "Skill3Button":
+                    {
+                        gameMan.GetBattleInfo().DoAction(2);
+                        break;
+                    }
+                case "Skill4Button":
+                    {
+                        gameMan.GetBattleInfo().DoAction(3);
+                        break;
+                    }
+            }
+        }
 
         switch (butName)
         {
-            case "Skill1Button":
-                {
-                   // TODO
-                    break;
-                }
-            case "Skill2Button":
-                {
-                    // TODO
-                    break;
-                }
-            case "Skill3Button":
-                {
-                    // TODO
-                    break;
-                }
-            case "Skill4Button":
-                {
-                    // TODO
-                    break;
-                }
             case "PlayButton":
                 {
                     PlayInput();
-                   
                     break;
                 }
             case "StopButton":
@@ -317,6 +330,8 @@ public class GUIManagerScript : MonoBehaviour
                     int numSimulations = int.Parse(gameButtons[butName].GetComponentInChildren<InputField>().text);
                     gameMan.StartSimulation(numSimulations);
 
+                    combatLogText.text = "";
+
                     break;
                 }
 
@@ -344,6 +359,7 @@ public class GUIManagerScript : MonoBehaviour
             //p2Buttons[str].interactable = true;
         }
 
+        gameMan.StartSimulation(1, true);
     }
 
     void StopInput()
@@ -367,11 +383,14 @@ public class GUIManagerScript : MonoBehaviour
 
         combatLogText.text = "";
 
+        gameMan.ResetSimulation();
     }
 
-    void AddCombatLogEntry(int fromPlayer, int toPlayer, Action action)
+    public void AddCombatLogEntry(string str)//int fromPlayer, int toPlayer, Action action)
     {
-        combatLogText.text += "Player " + fromPlayer + " used " + action.actionName + " to " + toPlayer + "\n";
+        //combatLogText.text += "Player " + fromPlayer + " used " + action.actionName + " to " + toPlayer + "\n";
+
+        combatLogText.text += str + "\n";
         
         Canvas.ForceUpdateCanvases();
         combatLogText.GetComponent<ContentSizeFitter>().SetLayoutVertical();

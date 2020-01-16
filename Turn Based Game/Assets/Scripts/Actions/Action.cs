@@ -16,8 +16,7 @@ public class Action
     {
         active = false;
         currentCooldown = cooldown;
-
-        ExecuteAction(owner ,opponent);
+        ExecuteAction(owner, opponent);
     }
     public void UpdateCooldown()
     {

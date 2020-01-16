@@ -6,11 +6,12 @@ public static class CSVManager
 {
     private static string reportFolderName = "Report";
     private static string reportFileName = "BattleInfo.csv";
-    private static string reportSeparator = ","; // CSV separator for columns
+    private static string reportSeparator = ";"; // CSV separator for columns
 
-    private static string[] reportHeaders = new string[14]
+    private static string[] reportHeaders = new string[16]
     {
         "Character A",
+        "LVL",
         "HP",
         "ATK",
         "DEF",
@@ -20,10 +21,11 @@ public static class CSVManager
         "ATK",
         "DEF",
         "SPEED",
+         "LVL",
         "Num Simulations",
         "Num Wins",
         "Num Defeats",
-        "TimeStamp"
+        "Win Rate"
     };
 
     public static void AppendToReport(Character charA, Character charB, int numSimulations, int numWins)
@@ -41,18 +43,23 @@ public static class CSVManager
                 if (stat.name == "avoid") continue;
                 finalString += stat.levelValue.ToString() + reportSeparator;
             }
+            finalString += charA.level.ToString() + reportSeparator;
+
             finalString += charB.characterName + reportSeparator;
             foreach (Statistic stat in charB.statistics)
             {
                 if (stat.name == "avoid") continue;
                 finalString += stat.levelValue.ToString() + reportSeparator;
             }
+
+            finalString += charB.level.ToString() + reportSeparator;
+
             // -------------------------------------------
             // general info
             finalString += numSimulations.ToString() + reportSeparator;             // num simulations
             finalString += numWins.ToString() + reportSeparator;                    // num wins
             finalString += (numSimulations - numWins).ToString() + reportSeparator; // num defeats
-            finalString += System.DateTime.UtcNow.ToString();                       // timestamp
+            finalString += ( (float)numWins / (float)numSimulations) * 100f +"%";                       // timestamp
 
             // write to file
             sw.WriteLine(finalString);

@@ -18,8 +18,7 @@ public class MyEvent
 
 public class GameManager : MonoBehaviour
 {
-
-    private GameState gameState = GameState.StopSimulation;
+    [HideInInspector] public GameState gameState = GameState.StopSimulation;
     [HideInInspector] public CharacterType selectedCharA;
     [HideInInspector] public CharacterType selectedCharB;
 
@@ -32,13 +31,14 @@ public class GameManager : MonoBehaviour
 
     private Battle battle;
 
-    [HideInInspector] public bool controlCharacterA = true;
-    [HideInInspector] public bool controlCharacterB = true;
+    [HideInInspector] public bool controlCharacterA = false;
+    [HideInInspector] public int  onlyUseAction = -1;
 
     [HideInInspector] public int  currentSimulation;
     [HideInInspector] public int  numSimulations = 10;
     [HideInInspector] public int  winBattles = 0;
-    [HideInInspector] public int  loseBattles = 0;
+    [HideInInspector] public int  loseBattles = 0;    
+
 
     private void Awake()
     {
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        numSimulations = 10;
+        numSimulations = 6;
         winBattles = 0;
         loseBattles = 0;
     }
@@ -107,20 +107,31 @@ public class GameManager : MonoBehaviour
                     break;
                 }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
     }
 
-    public void StartSimulation( int simulations )
+    public void StartSimulation( int simulations, bool controlCharacterA  = false, int onlyUseAction = -1)
     {
         if (gameState == GameState.StopSimulation)
         {
             ResetSimulation();
             numSimulations = simulations;
             gameState = GameState.StartSimulation;
+
+            this.controlCharacterA = controlCharacterA;
+            this.onlyUseAction = onlyUseAction;
         }
     }
 
     public void ResetSimulation()
     {
+        onlyUseAction = -1;
+        controlCharacterA = false;
         currentSimulation = numSimulations;
         battle.ResetBattle();
         winBattles = 0;

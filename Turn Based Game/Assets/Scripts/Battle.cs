@@ -20,8 +20,6 @@ public class Battle
     }
     public void UpdateBattle()
     {
-        CheckWinner();
-
         switch (battleState)
         {
             case BattleState.startBattle:
@@ -49,6 +47,8 @@ public class Battle
             default:
                 break;
         }
+
+        CheckWinner();
     }
 
     public Character GetOpponent()
@@ -86,6 +86,9 @@ public class Battle
         characterA = a;
         characterB = b;
 
+        characterA.SetLevelValues();
+        characterB.SetLevelValues();
+
         if (characterA != null && characterB != null)
         {
             battleState = BattleState.startRound;
@@ -96,6 +99,7 @@ public class Battle
         round = 1;
         battleState = BattleState.waitBattle;
         Object.FindObjectOfType<GameManager>().Events(new MyEvent(MyEventType.BattleFinished, null));
+        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry("Battle ended");
     }
 
     public void ResetBattle()
@@ -112,22 +116,64 @@ public class Battle
         currentChar = roundList[0];
 
         Debug.Log("Start Turn " + currentChar.characterName);
+        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry("Start Turn " + currentChar.characterName);
         currentChar.StartTurn();
 
         battleState = BattleState.waitTurn;
     }
     public void WaitTurn()
     {
-        //if (currentChar.WaitTurn(GetOpponent())) 
-        //{
-        //    battleState = BattleState.endTurn;
-        //}
-        currentChar.WaitTurn(GetOpponent());
-        battleState = BattleState.endTurn;
+        GameManager gameManager = Object.FindObjectOfType<GameManager>();
+
+        if (gameManager.controlCharacterA == true)
+        {
+           if (currentChar == characterB)
+            {
+                currentChar.DoRandomTurn(GetOpponent());
+                battleState = BattleState.endTurn;
+            }
+        }
+        else
+        {
+            if (gameManager.onlyUseAction != -1 && currentChar == characterA)
+            {
+                currentChar.DoOnlyAction(gameManager.onlyUseAction, GetOpponent());
+            }
+            else
+            {
+                currentChar.DoRandomTurn(GetOpponent());
+            }
+
+            battleState = BattleState.endTurn;
+        }
     }
+
+    public void DoAction(int action_num)
+    {
+        if (currentChar == null || battleState != BattleState.waitTurn) return;
+
+        if (action_num < currentChar.actions.Count)
+        {
+            Action action = currentChar.actions[action_num];
+
+            if (action.active)
+            {
+                Debug.Log(currentChar.characterName + " execute " + action.actionName);
+                Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(currentChar.characterName + " execute " + action.actionName);
+                action.Execute(currentChar, GetOpponent());
+
+                if (action.finishTurn == true)
+                {
+                    battleState = BattleState.endTurn;
+                }
+            }
+        }
+    }
+
     public void EndTurn()
     {
         Debug.Log("End Turn " + currentChar.characterName);
+        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry("End Turn " + currentChar.characterName);
 
         currentChar.EndTurn();
         roundList.Remove(currentChar);
@@ -145,7 +191,10 @@ public class Battle
     // Round Functions -------------------------
     public void StartRound()
     {
-        Debug.Log("Start Round : " + round.ToString());
+        string debug_str = "Start Round : " + round.ToString();
+        Debug.Log(debug_str);
+        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(debug_str);
+
         roundList.Clear();
         roundList.Add(characterA);
         roundList.Add(characterB);
@@ -155,7 +204,9 @@ public class Battle
     }
     public void EndRound()
     {
-        Debug.Log("End Round : " + round.ToString());
+        string debug_str = "End Round : " + round.ToString();
+        Debug.Log(debug_str);
+        Object.FindObjectOfType<GUIManagerScript>().AddCombatLogEntry(debug_str);
         ++round;
 
         battleState = BattleState.startRound;
@@ -172,9 +223,9 @@ public class Battle
         Statistic speedA = a.GetStat("speed");
         Statistic speedB = b.GetStat("speed");
 
-        if (speedA.finalValue < speedB.finalValue)
+        if (speedA.finalValue > speedB.finalValue)
             return -1;
-        else if (speedA.finalValue > speedB.finalValue)
+        else if (speedA.finalValue < speedB.finalValue)
             return 1;
         else
             return 0;
